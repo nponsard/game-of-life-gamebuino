@@ -1,35 +1,39 @@
 #include <Gamebuino-Meta.h>
 
 
+Color colors[10] = {BLACK, BLUE, LIGHTBLUE, LIGHTGREEN, GREEN, BEIGE, YELLOW, ORANGE, RED, WHITE};
+
+
 uint8_t grid[80][64] ;
 unsigned long time = 0 ;
 uint16_t temp = 0 ;
 
 void setup() {
-  for(int x=0;x<80;x++) {
-    for(int y=0;y<64;y++) {
-      grid[x][y] = random(0,2);
+  for (int x = 0; x < 80; x++) {
+    for (int y = 0; y < 64; y++) {
+      grid[x][y] = random(0, 2);
     }
   }
   gb.begin();
-  
+
 }
 
 void loop() {
   while (!gb.update());
   updateG();
   gb.display.clear();
-  gb.display.setColor(WHITE);
-  for(int x=0;x<80;x++) {
-    for(int y=0;y<64;y++) {
-      if(grid[x][y]) gb.display.drawPixel(x, y);
+
+  for (int x = 0; x < 80; x++) {
+    for (int y = 0; y < 64; y++) {
+      gb.display.setColor(colors[grid[x][y]]);
+      gb.display.drawPixel(x, y);
     }
   }
 
 
 
 
-
+/*
   // debug hud
   uint16_t ram = gb.getFreeRam();
   uint8_t load = gb.getCpuLoad();
@@ -60,6 +64,6 @@ void loop() {
 
   gb.display.print("RAM:");
   gb.display.println(ram);
-
+*/
 
 }

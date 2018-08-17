@@ -4,7 +4,7 @@ void updateG() {
   for (int x = 0; x < 80; x++) {
     for (int y = 0; y < 64; y++) {
       n = neighbours(grid, x, y);
-      temp[x][y] = 1;
+      temp[x][y] = grid[x][y]+1;
       if (grid[x][y] > 0) {
         if (n > 3 || n < 2) {
           temp[x][y] = 0;
@@ -13,6 +13,9 @@ void updateG() {
         if (n != 3) {
           temp[x][y] = 0;
         }
+      }
+      if (temp[x][y] > 9) {
+        temp[x][y] = 9;
       }
     }
   }
