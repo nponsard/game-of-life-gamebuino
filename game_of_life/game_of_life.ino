@@ -14,7 +14,7 @@ const char* entriesEon[] = {
   "Return",
 };
 bool Emode = false;
-
+long fCount = 0;
 
 
 Color colors[10] = {BLACK, BLUE, LIGHTBLUE, LIGHTGREEN, GREEN, BEIGE, YELLOW, ORANGE, RED, WHITE};
@@ -23,7 +23,7 @@ bool Play = true;
 uint8_t grid[80][64] ;
 unsigned long time = 0 ;
 uint16_t temp = 0 ;
-
+uint16_t pointer[2] = {40, 32};
 void setup() {
   for (int x = 0; x < 80; x++) {
     for (int y = 0; y < 64; y++) {
@@ -36,8 +36,35 @@ void setup() {
 
 void loop() {
   while (!gb.update());
+  fCount += 1;
+  if (gb.buttons.pressed(BUTTON_DOWN)) {
+    if (Emode && pointer[1] < 64) {
+      pointer[1] += 1;
+    }
+  }
+  if (gb.buttons.pressed(BUTTON_UP)) {
+    if (Emode && pointer[1] > 0) {
+      pointer[1] -= 1;
+    }
+  }
+  if (gb.buttons.pressed(BUTTON_RIGHT)) {
+    if (Emode && pointer[0] < 80) {
+      pointer[0] += 1;
+    }
+  }
+  if (gb.buttons.pressed(BUTTON_LEFT)) {
+    if (Emode && pointer[0] > 0) {
+      pointer[0] -= 1;
+    }
+  }
+
   if (gb.buttons.pressed(BUTTON_A)) {
     if (Emode) {
+      if (grid[pointer[0]][pointer[1]]) {
+        grid[pointer[0]][pointer[1]] = 0;
+      } else {
+        grid[pointer[0]][pointer[1]] = 1;
+      }
 
     } else {
       if (Play) {
@@ -101,6 +128,18 @@ void loop() {
     for (int y = 0; y < 64; y++) {
       gb.display.setColor(colors[grid[x][y]]);
       gb.display.drawPixel(x, y);
+    }
+  }
+  if (Emode) {
+
+    gb.display.setColor(PURPLE);
+    if (fCount % 2) {
+      gb.display.drawPixel(pointer[0] + 1, pointer[1]);
+      gb.display.drawPixel(pointer[0], pointer[1] + 1);
+      gb.display.drawPixel(pointer[0] - 1, pointer[1]);
+      gb.display.drawPixel(pointer[0], pointer[1] - 1);
+    } else {
+      gb.display.drawPixel(pointer[0], pointer[1]);
     }
   }
 
