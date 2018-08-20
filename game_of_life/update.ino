@@ -32,8 +32,8 @@ void updateG() {
 
 uint8_t neighbours(uint8_t grid[80][64], uint16_t x, uint16_t y) {
   uint8_t sum = 0;
-  uint16_t w = (sizeof(grid) / sizeof(*grid));
-  uint16_t h = (sizeof(grid[0]) / sizeof(*grid[0]));
+  uint16_t w = 80;
+  uint16_t h = 64;
   if (x != 0) {
     if (grid[x - 1][y]) sum += 1;
     if (y != h - 1) {

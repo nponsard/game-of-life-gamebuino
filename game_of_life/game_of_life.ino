@@ -1,5 +1,13 @@
 #include <Gamebuino-Meta.h>
 
+bool leftP = false;
+bool rightP = false;
+bool upP = false;
+bool downP = false;
+bool BP = false;
+
+const char* textr = "Randomized !" ;
+const char* textc = "Cleared !" ;
 
 const char* entriesEoff[] = {
   "Enter Edit mode",
@@ -40,26 +48,93 @@ void setup() {
 void loop() {
   while (!gb.update());
   fCount += 1;
+
+  if (upP && pointer[1] > 0) {
+    pointer[1] -= 1;
+  }
+  if (downP && pointer[1] < 63) {
+    pointer[1] += 1;
+  }
+  if (leftP && pointer[0] > 0) {
+    pointer[0] -= 1;
+  }
+  if (rightP && pointer[0] < 79) {
+    pointer[0] += 1;
+  }
+
+
+  if (gb.buttons.pressed(BUTTON_B)) {
+    BP = true;
+  }
+  if (gb.buttons.released(BUTTON_B)) {
+    BP = false;
+  }
+
   if (gb.buttons.pressed(BUTTON_DOWN)) {
-    if (Emode && pointer[1] < 64) {
-      pointer[1] += 1;
+    if (Emode) {
+      if (BP) {
+        downP = true ;
+      }
+      else {
+        pointer[1] += 1;
+      }
     }
   }
   if (gb.buttons.pressed(BUTTON_UP)) {
-    if (Emode && pointer[1] > 0) {
-      pointer[1] -= 1;
+    if (Emode) {
+      if (BP) {
+        upP = true;
+      }
+      else {
+        pointer[1] -= 1;
+      }
     }
   }
   if (gb.buttons.pressed(BUTTON_RIGHT)) {
-    if (Emode && pointer[0] < 80) {
-      pointer[0] += 1;
+    if (Emode) {
+      if (BP) {
+        rightP = true;
+      }
+      else {
+        pointer[0] += 1;
+      }
+
     }
   }
   if (gb.buttons.pressed(BUTTON_LEFT)) {
-    if (Emode && pointer[0] > 0) {
-      pointer[0] -= 1;
+    if (Emode) {
+      if (BP) {
+        leftP = true;
+      } else {
+        pointer[0] -= 1;
+      }
     }
   }
+
+
+  if (gb.buttons.released(BUTTON_DOWN)) {
+    if (Emode) {
+      downP = false ;
+    }
+  }
+  if (gb.buttons.released(BUTTON_UP)) {
+    if (Emode) {
+      upP = false;
+    }
+  }
+  if (gb.buttons.released(BUTTON_RIGHT)) {
+    if (Emode) {
+      rightP = false;
+    }
+  }
+  if (gb.buttons.released(BUTTON_LEFT)) {
+    if (Emode) {
+      leftP = false;
+    }
+  }
+
+
+
 
   if (gb.buttons.pressed(BUTTON_A)) {
     if (Emode) {
@@ -83,13 +158,13 @@ void loop() {
 
   }
   if (gb.buttons.pressed(BUTTON_MENU)) {
-    Play = false;
+
     uint8_t entry;
     if (Emode) {
       entry = gb.gui.menu("--Menu--", entriesEon, 4);
       if (entry == 0) {
         Emode = 0;
-        const char* text = "Emode OFF, Playing" ;
+        const char* text = "Edit mode OFF" ;
         gb.gui.popup( text,  25);
       }
     } else {
@@ -106,22 +181,24 @@ void loop() {
         for (int x = 0; x < 80; x++) {
           for (int y = 0; y < 64; y++) {
             grid[x][y] = 0;
-            const char* text = "Cleared !" ;
-            gb.gui.popup( text,  25);
           }
         }
+
+        gb.gui.popup( textc,  25);
         break;
+
       case 2 :
         for (int x = 0; x < 80; x++) {
           for (int y = 0; y < 64; y++) {
             grid[x][y] = random(0, 2);
-            const char* text = "Randomized !" ;
-            gb.gui.popup( text,  25);
+
           }
         }
+
+        gb.gui.popup( textr,  25);
         break;
     }
-    Play = true;
+
   }
   gb.display.clear();
   if (Play && !Emode) {
@@ -145,36 +222,36 @@ void loop() {
       gb.display.drawPixel(pointer[0], pointer[1]);
     }
   }
+  /*
+    // debug hud
+    uint16_t ram = gb.getFreeRam();
+    uint8_t load = gb.getCpuLoad();
+    if (load > 85) {
+      gb.display.setColor(RED);
+    } else {
+      gb.display.setColor(LIGHTBLUE);
+    }
 
-  // debug hud
-  uint16_t ram = gb.getFreeRam();
-  uint8_t load = gb.getCpuLoad();
-  if (load > 85) {
-    gb.display.setColor(RED);
-  } else {
-    gb.display.setColor(LIGHTBLUE);
-  }
-/*
-  gb.display.fillRect(0, 0, 29, 7);
-  gb.display.fillRect(43, 0, 40 , 7);
-  gb.display.setColor(GREEN);
-  gb.display.fillRect(31, 0, 9 , 7);
-  gb.display.setColor(WHITE);
+    gb.display.fillRect(0, 0, 29, 7);
+    gb.display.fillRect(43, 0, 40 , 7);
+    gb.display.setColor(GREEN);
+    gb.display.fillRect(31, 0, 9 , 7);
+    gb.display.setColor(WHITE);
 
-  gb.display.setCursor(1, 1);
-  gb.display.setFontSize(1);
-  gb.display.print("CPU:");
-  gb.display.print(load);
-  gb.display.println("%");
+    gb.display.setCursor(1, 1);
+    gb.display.setFontSize(1);
+    gb.display.print("CPU:");
+    gb.display.print(load);
+    gb.display.println("%");
 
 
-  gb.display.setCursor(32, 1);
-  temp = millis() - time ;
-  gb.display.print(1000 / temp);
-  time = millis();
-  gb.display.setCursor(44, 1);
+    gb.display.setCursor(32, 1);
+    temp = millis() - time ;
+    gb.display.print(1000 / temp);
+    time = millis();
+    gb.display.setCursor(44, 1);
 
-  gb.display.print("RAM:");
-  gb.display.println(ram);
+    gb.display.print("RAM:");
+    gb.display.println(ram);
   */
 }
