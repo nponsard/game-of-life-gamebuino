@@ -34,12 +34,74 @@ uint8_t neighbours(uint8_t grid[80][64], uint16_t x, uint16_t y) {
   uint8_t sum = 0;
   uint16_t w = 80;
   uint16_t h = 64;
+
+  if (x == 0) {
+    if (grid[w - 1][y]) sum += 1;
+    if (y == 0) {
+      if (grid[w - 1][h - 1]) sum += 1;
+    } else {
+      if (grid[w - 1][y - 1]) sum += 1;
+    }
+    if (y == h - 1) {
+      if (grid[w - 1][0]) sum += 1;
+    } else {
+      if (grid[w - 1][y + 1]) sum += 1;
+    }
+  }
+
+  if (x == w - 1) {
+    if (grid[0][y]) sum += 1;
+    if (y == 0) {
+      if (grid[0][h - 1]) sum += 1;
+    } else {
+      if (grid[0][y - 1]) sum += 1;
+    }
+    if (y == h - 1) {
+      if (grid[0][0]) sum += 1;
+    } else {
+      if (grid[0][y + 1]) sum += 1;
+    }
+  }
+
+  if (y == 0) {
+    if (grid[x][h - 1]) sum += 1;
+    if (x == 0) {
+      if (grid[w - 1][h - 1]) sum += 1;
+    } else {
+      if (grid[x - 1][h - 1]) sum += 1;
+    }
+    if (x == w - 1) {
+      if (grid[0][h - 1]) sum += 1;
+    } else {
+      if (grid[x + 1][h - 1]) sum += 1;
+    }
+  }
+
+  if (y == h - 1) {
+    if (grid[x][0]) sum += 1;
+    if (x == 0) {
+      if (grid[w - 1][0]) sum += 1;
+    } else {
+      if (grid[x - 1][0]) sum += 1;
+    }
+    if (x == w - 1) {
+      if (grid[0][0]) sum += 1;
+    } else {
+      if (grid[x + 1][0]) sum += 1;
+    }
+  }
+
+
+
+
+
   if (x != 0) {
     if (grid[x - 1][y]) sum += 1;
     if (y != h - 1) {
       if (grid[x - 1][y + 1]) sum += 1;
     }
   }
+
   if (y != 0) {
     if (grid[x][y - 1]) sum += 1;
     if (x != 0) {
@@ -49,9 +111,11 @@ uint8_t neighbours(uint8_t grid[80][64], uint16_t x, uint16_t y) {
       if (grid[x + 1][y - 1]) sum += 1;
     }
   }
+
   if (x != w - 1) {
     if (grid[x + 1][y]) sum += 1;
   }
+
   if (y != h - 1) {
     if (grid[x][y + 1]) sum += 1;
     if (x != w - 1) {

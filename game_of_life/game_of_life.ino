@@ -71,7 +71,7 @@ void loop() {
   }
 
   if (gb.buttons.pressed(BUTTON_DOWN)) {
-    if (Emode) {
+    if (Emode && pointer[1] < 63) {
       if (BP) {
         downP = true ;
       }
@@ -81,7 +81,7 @@ void loop() {
     }
   }
   if (gb.buttons.pressed(BUTTON_UP)) {
-    if (Emode) {
+    if (Emode && pointer[1] > 0) {
       if (BP) {
         upP = true;
       }
@@ -91,7 +91,7 @@ void loop() {
     }
   }
   if (gb.buttons.pressed(BUTTON_RIGHT)) {
-    if (Emode) {
+    if (Emode&& pointer[0] < 79) {
       if (BP) {
         rightP = true;
       }
@@ -102,7 +102,7 @@ void loop() {
     }
   }
   if (gb.buttons.pressed(BUTTON_LEFT)) {
-    if (Emode) {
+    if (Emode && pointer[0] > 0) {
       if (BP) {
         leftP = true;
       } else {
