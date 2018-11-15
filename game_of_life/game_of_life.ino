@@ -253,9 +253,11 @@ void loop()
   {
     for (int y = 0; y < 64; y++)
     {
-      gb.display.setColor(colors[grid[x][y]]);
-      gb.display.drawPixel(x, y);
-    }
+        if(grid[x][y]!=0){
+        gb.display.setColor(colors[grid[x][y]]);
+        gb.display.drawPixel(x, y);
+        }
+      }
   }
   if (Emode)
   {
